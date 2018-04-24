@@ -19,6 +19,8 @@ public:
 	Plazza(bool _isCLI, size_t nbThread);
 	virtual ~Plazza();
 	size_t getNbThread() const;
+	void parseCmd(std::string &cmd);
+	void readCmd();
 };
 
 #endif

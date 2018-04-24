@@ -13,7 +13,9 @@ int main(int ac, char **av)
 	(void)av;
 	if (ac != 2)
 		std::cout << "IsNoGood\n";
-	else
-		Plazza oui(true,5);
+	else {
+		Plazza oui(true, 5);
+		oui.readCmd();
+	}
 	return 0;
 }
