@@ -11,31 +11,31 @@
 #include <regex>
 #include "plazza.hpp"
 
-Plazza::Plazza(bool _isCLI, size_t nbThread)
+Plazza::Plazza::Plazza(bool _isCLI, size_t nbThread)
 	: _isCLI(_isCLI),
 	  _nbThread(nbThread)
 {
 	std::cout << "[Plazza] I have : " << _nbThread << " threads." << std::endl;
 }
 
-Plazza::~Plazza()
+Plazza::Plazza::~Plazza()
 {
 	std::cout << "[Plazza] I die\n";
 }
 
-size_t Plazza::getNbThread() const
+size_t Plazza::Plazza::getNbThread() const
 {
 	return _nbThread;
 }
 
-void Plazza::readCmd()
+void Plazza::Plazza::readCmd()
 {
 	for (std::string cmd; std::getline(std::cin, cmd); ) {
 		this->parseCmd(cmd);
 	}
 }
 
-void Plazza::parseCmd(std::string &cmd)
+void Plazza::Plazza::parseCmd(std::string &cmd)
 {
 	std::regex pattern(R"(([a-zA-Z _\.]{1,})(EMAIL_ADDRESS|IP_ADDRESS|PHONE_NUMBER))");
 	std::cmatch cm;

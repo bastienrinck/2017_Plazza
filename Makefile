@@ -13,7 +13,8 @@ SRCDIR		=	src
 OBJDIR		=	build
 
 LIST		=	main_cli	\
-				plazza
+				plazza		\
+				threadz
 
 SORTED		=	$(sort $(LIST))
 OBJS		=	$(SORTED:%=$(OBJDIR)/%.o)
