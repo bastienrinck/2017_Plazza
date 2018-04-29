@@ -15,6 +15,7 @@
 #define PHONE "[0-9]{10}"
 #define EMAIL "[a-zA-Z0-9_.-]+ ‘@’ [a-zA-Z0-9_.-]+"
 #define ADDR "[0-255].[0-255].[0-255].[0-255]"
+
 namespace Plazza {
 	typedef struct threadData_s {
 		size_t dataType;
