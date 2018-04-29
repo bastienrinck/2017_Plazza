@@ -55,9 +55,9 @@ void Plazza::Plazza::parseCmd(std::string &cmd)
 		//cm.str(0) contient le full match
 		//cm.str(1) contient le group 1 (fichier)
 		//cm.str(2) contient le group 2 (info a checher)
-		cmd = cm.suffix().str();
 		file = cm.str(1);
 		type = cm.str(2);
+		cmd = cm.suffix().str();
 		std::cout << "Fichier: " << file << "type: " << type << std::endl;
 	}
 	std::cout << "parseCmd out\n";
