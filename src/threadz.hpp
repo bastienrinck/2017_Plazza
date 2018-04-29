@@ -12,8 +12,8 @@
 #include <vector>
 #include <thread>
 
-#define PHONE "[0-9]{10}"
-#define EMAIL "[a-zA-Z0-9_.-]+ ‘@’ [a-zA-Z0-9_.-]+"
+#define PHONE "(0[1-9]) ?([0-9][0-9] ?){4}"
+#define EMAIL "[a-zA-Z0-9_\\\\.-]+@[a-zA-Z0-9_\\\\.-]+\\\\.[a-zA-Z0-9_\\\\.-]+"
 #define ADDR "[0-255].[0-255].[0-255].[0-255]"
 
 namespace Plazza {

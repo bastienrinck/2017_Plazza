@@ -23,11 +23,14 @@ int main(int ac, char **av)
 	if (ac != 2)
 		std::cout << "IsNoGood\n";
 	else {
+		// Todo Creation du plazza
 		Plazza::Plazza pl(true, static_cast<size_t>(std::stoi(av[1])));
 		pl.startPlazza();
+
+		//Todo Creation du thread pour parse le fichier
 //		Plazza::threadData_t thData;
-//		thData.dataType = 1;
-//		thData.fileName = "../tests/phone.txt";
+//		thData.dataType = 2;
+//		thData.fileName = "./tests/phone.txt";
 //		Plazza::Threadz th;
 //		std::thread threadFoo(&Plazza::Threadz::Info, &th, std::ref(thData));
 //		threadFoo.join();

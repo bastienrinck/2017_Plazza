@@ -34,10 +34,11 @@ void Plazza::Plazza::readCmd()
 	while (true) {
 		// TODO delete this print for final push
 		std::cout << "Prompt > ";
-		std::cin >> cmd;
+		for (; std::getline(std::cin, cmd); ) {
+			this->parseCmd(cmd);
+		}
 		if (std::cin.eof())
 			break;
-		this->parseCmd(cmd);
 	}
 }
 
