@@ -23,6 +23,8 @@ namespace Plazza {
 		bool _isCLI;
 		size_t _nbThread;
 		std::string cmd;
+		std::string file;
+		std::string type;
 	public:
 		Plazza(bool _isCLI, size_t nbThread);
 		virtual ~Plazza();

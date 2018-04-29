@@ -32,7 +32,7 @@ size_t Plazza::Plazza::getNbThread() const
 void Plazza::Plazza::readCmd()
 {
 	while (true) {
-		//delete this print for final push
+		// TODO delete this print for final push
 		std::cout << "Prompt > ";
 		std::cin >> cmd;
 		if (std::cin.eof())
@@ -46,6 +46,7 @@ void Plazza::Plazza::parseCmd(std::string &cmd)
 	std::regex pattern(
 		R"(([a-zA-Z _\.]{1,})(EMAIL_ADDRESS|IP_ADDRESS|PHONE_NUMBER))");
 	std::cmatch cm;
+	std::cout << "parseCmd in\n";
 	while (std::regex_search(cmd.c_str(), cm, pattern)) {
 		for (auto x:cm) {
 			std::cout << x << std::endl;
@@ -54,7 +55,11 @@ void Plazza::Plazza::parseCmd(std::string &cmd)
 		//cm.str(1) contient le group 1 (fichier)
 		//cm.str(2) contient le group 2 (info a checher)
 		cmd = cm.suffix().str();
+		file = cm.str(1);
+		type = cm.str(2);
+		std::cout << "Fichier: " << file << "type: " << type << std::endl;
 	}
+	std::cout << "parseCmd out\n";
 }
 
 int Plazza::Plazza::startPlazza()
