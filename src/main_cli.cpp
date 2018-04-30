@@ -38,6 +38,7 @@ int main(int ac, char **av)
 //		print_vector(th.get_Phone());
 		//Todo fork des slave test
 		Plazza::Slave slave;
+		std::cout << "On as: " << slave.get_forkPid() << std::endl;
 	}
 	std::cout << "MAIN END\n";
 	return 0;

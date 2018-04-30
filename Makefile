@@ -15,7 +15,9 @@ OBJDIR		=	build
 LIST		=	main_cli	\
 				plazza		\
 				threadz		\
-				slave
+				slave		\
+				slavePool	\
+				threadzPool
 
 SORTED		=	$(sort $(LIST))
 OBJS		=	$(SORTED:%=$(OBJDIR)/%.o)

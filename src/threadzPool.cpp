@@ -20,3 +20,8 @@ Plazza::threadPool::threadPool()
 Plazza::threadPool::~threadPool()
 {
 }
+
+bool Plazza::threadPool::allThreadzAsleep()
+{
+	return true;
+}

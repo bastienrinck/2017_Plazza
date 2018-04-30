@@ -16,6 +16,7 @@ namespace Plazza {
 		threadPool();
 		virtual ~threadPool();
 		void createThread();
+		bool allThreadzAsleep();
 	private:
 		std::vector<Threadz> myThreads;
 	};
