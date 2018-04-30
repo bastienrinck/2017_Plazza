@@ -19,6 +19,7 @@ Plazza::Plazza::Plazza(bool _isCLI, size_t nbThread)
 {
 	std::cout << "[Plazza] I have : " << _nbThread << " threads."
 		<< " And my pid is: " << _plazzaPID << std::endl;
+	this->_slavePool.setNbThreads(nbThread);
 }
 
 Plazza::Plazza::~Plazza()
@@ -49,20 +50,15 @@ void Plazza::Plazza::parseCmd(std::string &cmd)
 	std::regex pattern(
 		R"(([a-zA-Z _\.]{1,})(EMAIL_ADDRESS|IP_ADDRESS|PHONE_NUMBER))");
 	std::cmatch cm;
-	std::cout << "parseCmd in\n";
 	while (std::regex_search(cmd.c_str(), cm, pattern)) {
-		for (auto x:cm) {
-			std::cout << x << std::endl;
-		}
 		//cm.str(0) contient le full match
 		//cm.str(1) contient le group 1 (fichier)
 		//cm.str(2) contient le group 2 (info a checher)
 		_file = cm.str(1);
 		_type = cm.str(2);
 		cmd = cm.suffix().str();
-		std::cout << "Fichier: " << _file << "type: " << _type << std::endl;
+		this->_slavePool.proceedCommand(_file, _type);
 	}
-	std::cout << "parseCmd out\n";
 }
 
 int Plazza::Plazza::startPlazza()

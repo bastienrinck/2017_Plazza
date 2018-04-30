@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <glob.h>
+#include "slavePool.hpp"
 
 namespace Plazza {
 	enum dataTypes {
@@ -26,6 +27,7 @@ namespace Plazza {
 		std::string _file;
 		std::string _type;
 		int _plazzaPID;
+		slavePool _slavePool;
 	public:
 		Plazza(bool _isCLI, size_t nbThread);
 		virtual ~Plazza();
