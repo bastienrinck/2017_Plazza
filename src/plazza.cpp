@@ -9,14 +9,16 @@
 #include <iostream>
 #include <sstream>
 #include <regex>
+#include <zconf.h>
 #include "plazza.hpp"
 
 Plazza::Plazza::Plazza(bool _isCLI, size_t nbThread)
 	: _isCLI(_isCLI),
-	  _nbThread(nbThread)
+	  _nbThread(nbThread),
+	  _plazzaPID(getpid())
 {
 	std::cout << "[Plazza] I have : " << _nbThread << " threads."
-		<< std::endl;
+		<< " And my pid is: " << _plazzaPID << std::endl;
 }
 
 Plazza::Plazza::~Plazza()
@@ -34,8 +36,8 @@ void Plazza::Plazza::readCmd()
 	while (true) {
 		// TODO delete this print for final push
 		std::cout << "Prompt > ";
-		for (; std::getline(std::cin, cmd); ) {
-			this->parseCmd(cmd);
+		for (; std::getline(std::cin, _cmd); ) {
+			this->parseCmd(_cmd);
 		}
 		if (std::cin.eof())
 			break;
@@ -55,10 +57,10 @@ void Plazza::Plazza::parseCmd(std::string &cmd)
 		//cm.str(0) contient le full match
 		//cm.str(1) contient le group 1 (fichier)
 		//cm.str(2) contient le group 2 (info a checher)
-		file = cm.str(1);
-		type = cm.str(2);
+		_file = cm.str(1);
+		_type = cm.str(2);
 		cmd = cm.suffix().str();
-		std::cout << "Fichier: " << file << "type: " << type << std::endl;
+		std::cout << "Fichier: " << _file << "type: " << _type << std::endl;
 	}
 	std::cout << "parseCmd out\n";
 }

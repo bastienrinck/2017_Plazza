@@ -36,6 +36,7 @@ void Plazza::Threadz::getFromFile(threadData_t thData, char *reg)
 
 void Plazza::Threadz::Info(threadData_t &thData)
 {
+	isWorking = true;
 	std::ifstream ifs(thData.fileName);
 	if (ifs.fail()) {
 		std::cerr << "Error: " << strerror(errno) << std::endl;
@@ -44,22 +45,20 @@ void Plazza::Threadz::Info(threadData_t &thData)
 		(std::istreambuf_iterator<char>()));;
 	switch (thData.dataType) {
 		case 1:
-			getFromFile(thData, const_cast<char *>(PHONE));
+			getFromFile(thData, const_cast<char *>(TEL));
 			break;
 		case 2:
-			getFromFile(thData, const_cast<char *>(EMAIL));
+			getFromFile(thData, const_cast<char *>(EM));
 			break;
 		case 3:
-			getFromFile(thData, const_cast<char *>(ADDR));
+			getFromFile(thData, const_cast<char *>(AD));
 			break;
 		default:
 			break;
 	}
+	isWorking = false;
 }
 
-Plazza::Threadz::Threadz()
-{
-}
 
 Plazza::Threadz::~Threadz()
 {
@@ -78,6 +77,16 @@ const std::vector<std::string> &Plazza::Threadz::get_Email() const
 const std::vector<std::string> &Plazza::Threadz::get_Adress() const
 {
 	return _Adress;
+}
+
+bool Plazza::Threadz::isIsWorking() const
+{
+	return isWorking;
+}
+
+Plazza::Threadz::Threadz()
+	: isWorking(false)
+{
 }
 
 

@@ -22,9 +22,10 @@ namespace Plazza {
 	private:
 		bool _isCLI;
 		size_t _nbThread;
-		std::string cmd;
-		std::string file;
-		std::string type;
+		std::string _cmd;
+		std::string _file;
+		std::string _type;
+		int _plazzaPID;
 	public:
 		Plazza(bool _isCLI, size_t nbThread);
 		virtual ~Plazza();

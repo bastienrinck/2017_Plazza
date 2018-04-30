@@ -5,20 +5,19 @@
 ** Created by Benjamin
 */
 
-#ifndef CPP_PLAZZA_SLAVE_HPP
-#define CPP_PLAZZA_SLAVE_HPP
+#ifndef CPP_PLAZZA_THREADZPOOL_HPP
+#define CPP_PLAZZA_THREADZPOOL_HPP
 
-#include <vector>
 #include "threadz.hpp"
 
 namespace Plazza {
-	class Slave {
+	class threadPool {
 	public:
-		Slave();
-		virtual ~Slave();
+		threadPool();
+		virtual ~threadPool();
+		void createThread();
 	private:
 		std::vector<Threadz> myThreads;
-
 	};
 }
 #endif
