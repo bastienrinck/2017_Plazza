@@ -8,6 +8,8 @@
 #ifndef CPP_PLAZZA_GUIMANAGER_HPP
 #define CPP_PLAZZA_GUIMANAGER_HPP
 
+#include <SFML/Graphics.hpp>
+
 namespace Plazza {
 	class GuiManager {
 	public:
@@ -19,6 +21,7 @@ namespace Plazza {
 		void setButtonWindow();
 		bool isOpen() const;
 		bool guiLoop();
+		bool pollEvents();
 	private:
 		sf::RenderWindow _window;
 		sf::Text _text;
@@ -26,10 +29,6 @@ namespace Plazza {
 		sf::Sprite _sprite;
 		sf::Texture _texture;
 		sf::Texture _textureImg;
-
-		bool guiLoop();
-
-		bool pollEvents();
 	};
 };
 #endif /* !CPP_PLAZZA_GUIMANAGER_HPP */

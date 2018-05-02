@@ -32,14 +32,13 @@ OBJS		=	$(SORTED:%=$(OBJDIR)/%.o)
 CPPFLAGS 	=	-I./src
 CPPFLAGS 	+=	-W -Wall -Wextra -g -std=c++11 -std=gnu++11
 LDFLAGS		=	-L./lib/ -lpthread -I./src
-SFMLFLAGS	=	-lsfml-graphics
 
 all: 	 $(NAME)
 
 ui:	$(NAME_UI)
 
 $(NAME_UI):	$(OBJS_UI)
-		$(CC) $(NAME_UI) $(OBJS_UI) $(LDFLAGS) -lsfml-graphics
+		$(CC) $(NAME_UI) $(OBJS_UI) $(LDFLAGS) -lsfml-graphic
 		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME) | tr ' ' '.'
 
 $(NAME): $(OBJS)
