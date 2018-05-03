@@ -21,6 +21,7 @@ namespace Plazza {
 		void setButtonWindow();
 		bool isOpen() const;
 		bool guiLoop();
+		bool pollEvents();
 	private:
 		sf::RenderWindow _window;
 		sf::Text _text;

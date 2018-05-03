@@ -31,7 +31,6 @@ OBJS		=	$(SORTED:%=$(OBJDIR)/%.o)
 CPPFLAGS 	=	-I./src
 CPPFLAGS 	+=	-W -Wall -Wextra -g -std=c++11 -std=gnu++11
 LDFLAGS		=	-L./lib/ -lpthread -I./src
-SFMLFLAGS	=	-lsfml-graphics
 
 all: 	 $(NAME)
 
