@@ -13,12 +13,6 @@
 #include "slavePool.hpp"
 
 namespace Plazza {
-	enum dataTypes {
-		PHONE,
-		EMAIL,
-		ADDR
-	};
-
 	class Plazza {
 	private:
 		bool _isCLI;

@@ -18,6 +18,7 @@ namespace Plazza {
 		Slave();
 		virtual ~Slave();
 		int get_forkPid() const;
+		void giveJob(std::string filePath, ::Plazza::dataTypes dT);
 	private:
 		threadPool _threadPool;
 		int _forkPid;

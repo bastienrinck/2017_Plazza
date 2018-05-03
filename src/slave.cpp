@@ -24,7 +24,7 @@ Plazza::Slave::Slave()
 			auto end = std::chrono::system_clock::now();
 			std::chrono::duration<double> elapsed_seconds =
 				end - start;
-			if (!(_threadPool.allThreadzAsleep()))
+			if (!(_threadPool.allAsleep()))
 				start = std::chrono::system_clock::now();
 			if (elapsed_seconds.count() >= 4)
 				i = 1;
@@ -46,4 +46,10 @@ Plazza::Slave::~Slave()
 int Plazza::Slave::get_forkPid() const
 {
 	return _forkPid;
+}
+
+void Plazza::Slave::giveJob(std::string filePath, ::Plazza::dataTypes dT)
+{
+	(void)filePath;
+	(void)dT;
 }

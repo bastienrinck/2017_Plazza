@@ -8,6 +8,7 @@
 #ifndef CPP_PLAZZA_THREADZPOOL_HPP
 #define CPP_PLAZZA_THREADZPOOL_HPP
 
+#include "datatype.hpp"
 #include "threadz.hpp"
 
 namespace Plazza {
@@ -15,10 +16,12 @@ namespace Plazza {
 	public:
 		threadPool();
 		virtual ~threadPool();
-		void createThread();
-		bool allThreadzAsleep();
+		void createThread(const ::Plazza::threadData_t &tD);
+		void giveJob(threadData_t &dT);
+		bool allAsleep();
+		::Plazza::Threadz *canWork();
 	private:
-		std::vector<Threadz> myThreads;
+		std::vector<Threadz *> _myThreads;
 	};
 }
 #endif

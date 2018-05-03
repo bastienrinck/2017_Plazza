@@ -5,7 +5,6 @@
 ## Makefile
 ##
 
-NAME_UI		=	plazza
 NAME		=	plazza
 CC			=	g++ -o
 RM			=	@rm -f
@@ -21,7 +20,7 @@ LIST		=	main_cli	\
 				threadzPool
 
 LIST_UI		=	main_gui	\
-			GuiManager
+				GuiManager
 
 SORTED_UI	=	(sort $(LIST_UI))
 SORTED		=	$(sort $(LIST))
@@ -39,11 +38,11 @@ all: 	 $(NAME)
 ui:	$(NAME_UI)
 
 $(NAME_UI):	$(OBJS_UI)
-		$(CC) $(NAME_UI) $(OBJS_UI) $(LDFLAGS) -lsfml-graphics
+		@$(CC) $(NAME) $(OBJS_UI) $(LDFLAGS) -lsfml-graphics
 		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME) | tr ' ' '.'
 
 $(NAME): $(OBJS)
-	$(CC) $(NAME) $(OBJS) $(LDFLAGS)
+	@$(CC) $(NAME) $(OBJS) $(LDFLAGS)
 	@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME) | tr ' ' '.'
 
 $(OBJS):	$(OBJDIR)
@@ -57,11 +56,11 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
-	$(CC) $(CPPFLAGS) -c -o $@ $<
+	@$(CC) $(CPPFLAGS) -c -o $@ $<
 	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 $(OBJDIR_UI)/%.o:	$(SRCDIR_UI)/%.cpp
-	$(CC) $(CPPFLAGS) -c -o $@ $<
+	@$(CC) $(CPPFLAGS) -c -o $@ $<
 	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 clean:

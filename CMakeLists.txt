@@ -18,4 +18,4 @@ add_executable(cpp_plazza
         src/slavePool.cpp
         src/slavePool.hpp
         src/GuiManager.hpp
-        src/GuiManager.cpp)
+        src/GuiManager.cpp src/datatype.hpp)

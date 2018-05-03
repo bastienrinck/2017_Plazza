@@ -8,6 +8,7 @@
 #ifndef CPP_PLAZZA_SLAVEPOOL_HPP
 #define CPP_PLAZZA_SLAVEPOOL_HPP
 
+#include <vector>
 #include "slave.hpp"
 
 namespace Plazza {

@@ -36,7 +36,7 @@ void Plazza::slavePool::proceedCommand(std::string &file, std::string &type)
 		token = file.substr(0, pos);
 		file.erase(0, pos + delim.length());
 		if (this->isValidFile(token))
-			std::cout << "le fichier (" << token << ") est correct" << std::endl;
+			std::cout << "le fichier (" << token << ") est correct et " << type << std::endl;
 	}
 }
 
