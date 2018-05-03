@@ -10,14 +10,18 @@
 
 #include <vector>
 #include "threadz.hpp"
+#include "threadzPool.hpp"
 
 namespace Plazza {
 	class Slave {
 	public:
 		Slave();
 		virtual ~Slave();
+		int get_forkPid() const;
+		void giveJob(std::string filePath, ::Plazza::dataTypes dT);
 	private:
-		std::vector<Plazza::Threadz> myThreads;
+		threadPool _threadPool;
+		int _forkPid;
 
 	};
 }

@@ -10,4 +10,12 @@ add_executable(cpp_plazza
         src/plazza.cpp
         src/plazza.hpp
         src/threadz.cpp
-        src/threadz.hpp src/slave.cpp src/slave.hpp)
+        src/threadz.hpp
+        src/slave.cpp
+        src/slave.hpp
+        src/threadzPool.cpp
+        src/threadzPool.hpp
+        src/slavePool.cpp
+        src/slavePool.hpp
+        src/GuiManager.hpp
+        src/GuiManager.cpp src/datatype.hpp)
