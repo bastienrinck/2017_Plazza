@@ -5,15 +5,15 @@
 ** GuiManager.cpp
 */
 
+#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GuiManager.hpp"
 
 Plazza::GuiManager::GuiManager()
 {
-	_window.setFramerateLimit(30);
 	_texture.create(1920, 1080);
 	_sprite.setTexture(_texture);
-	_font.loadFromFile("resources/fonts/font.ttf");
+	_font.loadFromFile("fonts/font.ttf");
 	_textureImg.loadFromFile("img/blue-circle.png");
 }
 
@@ -70,4 +70,5 @@ bool Plazza::GuiManager::guiLoop()
 		_window.display();
 	}
 	closeRenderer();
+	return true;
 }

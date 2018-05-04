@@ -29,7 +29,6 @@ namespace Plazza {
 		sf::Sprite _sprite;
 		sf::Texture _texture;
 		sf::Texture _textureImg;
-		bool pollEvents();
 	};
 };
 #endif
