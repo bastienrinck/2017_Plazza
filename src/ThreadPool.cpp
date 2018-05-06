@@ -12,6 +12,7 @@
 Plazza::ThreadPool::ThreadPool(struct sockaddr master, size_t maxThread) :
 	_maxThread(maxThread)
 {
+	_tsync.available = maxThread;
 	std::cout << "[ThreadPool] Creating threads" << std::endl;
 	for (size_t i = 0; i < _maxThread; ++i)
 		_threads.push_back(std::unique_ptr<Plazza::Thread>(
@@ -26,6 +27,7 @@ size_t Plazza::ThreadPool::getWorkLoad()
 
 	_tsync.avmtx.lock();
 	available = _tsync.available;
+	std::cout << "Available: " << available << std::endl;
 	_tsync.avmtx.unlock();
 	return available;
 }
