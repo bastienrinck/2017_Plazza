@@ -63,11 +63,11 @@ $(OBJDIR):
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
-	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
+	@printf "[\e[35;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 $(OBJDIR_UI)/%.o:	$(SRCDIR_UI)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
-	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
+	@printf "[\e[35;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 clean:
 	$(RM) $(OBJS)

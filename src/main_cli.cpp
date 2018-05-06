@@ -20,34 +20,15 @@ void print_vector(std::vector<std::string> vec)
 
 int main(int ac, char **av)
 {
-	if (ac != 2)
-		std::cout << "IsNoGood\n";
+	int ret = 0;
+	if (ac != 2) {
+		ret = 84;
+		std::cout << "Usage: ./Plazza NUMBERS_THREADS\n";
+	}
 	else {
-		(void)av;
 		// Todo Creation du plazza
 		Plazza::Plazza pl(true, std::stoul(av[1]));
 		pl.startPlazza();
-
-/*		//Todo Creation du thread pour parse le fichier
-//		::Plazza::threadData_t thData;
-//		thData.dT = ::Plazza::EMAIL;
-//		thData.fileName = "./tests/tests.txt";
-//		::Plazza::Thread th;
-//		std::thread threadFoo(&Plazza::Thread::proceedTask, &th, std::ref(thData));
-//		threadFoo.join();
-//		usleep(5000);
-//		print_vector(th.getAdress());
-		//Todo fork des slave test
-//		Plazza::Fork slave;
-//		std::cout << "On as: " << slave.getForkPid() << std::endl;
-		//Todo Donner les ordres depuis le threadpool*
-		::Plazza::threadData_t thData;
-		thData.dT = ::Plazza::EMAIL;
-		thData.fileName = "./tests/tests.txt";
-		::Plazza::ThreadPool tp;
-		tp.proceedCmd(thData);
-		*/
 	}
-	std::cout << "MAIN END\n";
 	return 0;
 }
