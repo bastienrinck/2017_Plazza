@@ -21,9 +21,11 @@ namespace Plazza {
 		int send(const std::string &) const;
 		int receive(std::string &);
 		int getSocket() const;
+		struct sockaddr getSockaddr() const;
+
 	private:
 		int _socket = -1;
-		struct sockaddr _s_in = {0};
+		struct sockaddr _s_in = {0, 0};
 		bool _connected = false;
 	};
 }

@@ -18,11 +18,16 @@ OBJDIR		=	build
 OBJDIR_UI	=	build
 
 LIST		=	main_cli	\
-				plazza		\
-				threadz		\
-				slave		\
-				slavePool	\
-				threadzPool
+			Plazza		\
+			Thread		\
+			Fork		\
+			ForkPool	\
+			ThreadPool	\
+			Socket	\
+			ServerSocket	\
+			ClientSocket	\
+			TCPSocket	\
+			UnixSocket
 
 LIST_UI		=	main_gui	\
 				GuiManager
@@ -31,9 +36,9 @@ SORTED_UI	=	$(sort $(LIST_UI))
 SORTED		=	$(sort $(LIST))
 
 OBJS_UI		=	$(SORTED_UI:%=$(OBJDIR_UI)/%.o)
-OBJS		=	$(SORTED:%=$(OBJDIR)/%.o)
+OBJS		=	$(SORTED:%=$(OBJDIR)/%.o) 
 
-CPPFLAGS 	=	-I./src
+CPPFLAGS 	=	-I./src -I./src/sockets
 CPPFLAGS 	+=	-W -Wall -Wextra -g -std=c++11 -std=gnu++11
 LDFLAGS		=	-L./lib/ -lpthread -I./src
 
@@ -59,6 +64,7 @@ $(OBJDIR):
 $(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
 	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
+
 $(OBJDIR_UI)/%.o:	$(SRCDIR_UI)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
 	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'

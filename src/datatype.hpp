@@ -5,21 +5,30 @@
 ** Created by Benjamin
 */
 
-#ifndef CPP_PLAZZA_DATATYPE_HPP
-#define CPP_PLAZZA_DATATYPE_HPP
+#pragma once
+
+#include <mutex>
+#include <condition_variable>
+#include <queue>
 
 namespace Plazza {
+
+	typedef struct task_s {
+		std::string filename;
+		size_t dataType;
+	}task_t;
+
+	typedef struct threadSync_s {
+		std::mutex cvmtx;
+		std::mutex avmtx;
+		std::condition_variable cv;
+		size_t available;
+		std::queue<task_t> queue;
+	} threadSync_t;
+
 	enum dataTypes {
 		PHONE,
 		EMAIL,
 		ADDR
 	};
-
-	typedef struct threadData_s {
-		dataTypes dT;
-		std::string fileName;
-		std::string content;
-	} threadData_t;
 }
-
-#endif
