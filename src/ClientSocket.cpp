@@ -30,12 +30,15 @@ Plazza::ClientSocket::~ClientSocket()
 	close(_socket);
 }
 
-bool Plazza::ClientSocket::setSocket(const std::string &ip, int port) {
+bool Plazza::ClientSocket::setSocket(const std::string &ip, int port)
+{
+	bool ret;
 	auto s_in = (struct sockaddr_in *)&_s_in;
 
 	s_in->sin_family = AF_LOCAL;
-	inet_pton(AF_LOCAL, ip.c_str(), &s_in->sin_addr.s_addr);
+	ret = (inet_pton(AF_LOCAL, ip.c_str(), &s_in->sin_addr.s_addr) == 1);
 	s_in->sin_port = htons((unsigned short)port);
+	return ret;
 }
 
 bool Plazza::ClientSocket::connect()
@@ -80,4 +83,9 @@ int Plazza::ClientSocket::receive(std::string &container)
 int Plazza::ClientSocket::getSocket() const
 {
 	return _socket;
+}
+
+struct sockaddr Plazza::ClientSocket::getSockaddr() const
+{
+	return _s_in;
 }

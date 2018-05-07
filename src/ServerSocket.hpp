@@ -22,6 +22,7 @@ namespace Plazza {
 		bool accept();
 		int send(const std::string &, size_t = 0) const;
 		int receive(std::string &, size_t = 0);
+		void closeConnection(int fd);
 		int getSocket() const;
 		std::vector<int> getClient() const;
 		std::string getSocketIp() const;

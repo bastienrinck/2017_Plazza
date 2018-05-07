@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <memory>
 #include "TCPSocket.hpp"
 #include "ServerSocket.hpp"
 #include "ClientSocket.hpp"
@@ -20,7 +21,7 @@ namespace Plazza {
 		void closeClient();
 
 	private:
-		TCPSocket *_server;
-		TCPSocket *_client;
+		std::unique_ptr<TCPSocket> _server = nullptr;
+		std::unique_ptr<TCPSocket> _client = nullptr;
 	};
 }

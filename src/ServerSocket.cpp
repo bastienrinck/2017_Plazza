@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstring>
 #include <zconf.h>
+#include <algorithm>
 #include <arpa/inet.h>
 #include "ServerSocket.hpp"
 
@@ -23,7 +24,7 @@ Plazza::ServerSocket::ServerSocket(int socket)
 
 Plazza::ServerSocket::ServerSocket(int socket, int client)
 {
-	struct sockaddr s_in_client;
+	struct sockaddr s_in_client{0, 0};
 	socklen_t size = sizeof(_s_in);
 
 	_socket = socket;
@@ -58,7 +59,7 @@ bool Plazza::ServerSocket::setSocket(int port)
 bool Plazza::ServerSocket::accept()
 {
 	int fd;
-	struct sockaddr s_in_client = {0};
+	struct sockaddr s_in_client = {0, 0};
 	socklen_t size = sizeof(_s_in);
 
 	fd = ::accept(_socket, &s_in_client, &size);
@@ -118,4 +119,12 @@ std::string Plazza::ServerSocket::getSocketIp() const
 int Plazza::ServerSocket::getSocketPort() const
 {
 	return  ntohs(((struct sockaddr_in *)&_s_in)->sin_port);
+}
+
+void Plazza::ServerSocket::closeConnection(int fd)
+{
+	auto pos = std::find(_client.begin(), _client.end(), fd);
+
+	if (pos != _client.end())
+		_client.erase(pos);
 }

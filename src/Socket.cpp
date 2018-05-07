@@ -15,11 +15,15 @@ Plazza::Socket::Socket(bool spair)
 
 	if (spair) {
 		::socketpair(AF_LOCAL, SOCK_STREAM, 0, _fd);
-		_server = new Plazza::ServerSocket(-1, _fd[0]);
-		_client = new Plazza::ClientSocket(_fd[1]);
+		_server = std::unique_ptr<TCPSocket>(
+			new Plazza::ServerSocket(-1, _fd[0]));
+		_client = std::unique_ptr<TCPSocket>(
+			new Plazza::ClientSocket(_fd[1]));
 	} else {
-		_server = new Plazza::ServerSocket();
-		_client = new Plazza::ClientSocket();
+		_server = std::unique_ptr<TCPSocket>(
+			new Plazza::ServerSocket());
+		_client = std::unique_ptr<TCPSocket>(
+			new Plazza::ClientSocket());
 	}
 }
 
@@ -27,20 +31,20 @@ Plazza::Socket::~Socket() = default;
 
 Plazza::TCPSocket *Plazza::Socket::getServer() const
 {
-	return _server;
+	return _server.get();
 }
 
 Plazza::TCPSocket *Plazza::Socket::getClient() const
 {
-	return _client;
+	return _client.get();
 }
 
 void Plazza::Socket::closeServer()
 {
-	close(((Plazza::ServerSocket *)getServer())->getSocket());
+	close(dynamic_cast<Plazza::ServerSocket *>(getServer())->getSocket());
 }
 
 void Plazza::Socket::closeClient()
 {
-	close(((Plazza::ClientSocket *)getClient())->getSocket());
+	close(dynamic_cast<Plazza::ClientSocket *>(getClient())->getSocket());
 }
