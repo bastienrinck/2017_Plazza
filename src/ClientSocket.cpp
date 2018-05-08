@@ -9,7 +9,6 @@
 #include <zconf.h>
 #include <iostream>
 #include <cstring>
-#include <cstdlib>
 #include "ClientSocket.hpp"
 #include "Socket.hpp"
 
@@ -64,9 +63,8 @@ int Plazza::ClientSocket::send(const std::string &data) const
 		std::cerr << "ClientSocket::send : Socket not connected."
 			<< std::endl;
 	else {
-		std::string len = std::to_string(data.length());
-		len = std::string(8 - len.size(), '0').append(len);
-		::send(_socket, len.c_str(), 8, 0);
+		auto size = data.size();
+		::send(_socket, &size, sizeof(size), 0);
 		ret = ::send(_socket, data.c_str(), data.size(), 0);
 	}
 	return static_cast<int>(ret);
@@ -74,22 +72,20 @@ int Plazza::ClientSocket::send(const std::string &data) const
 
 int Plazza::ClientSocket::receive(std::string &container)
 {
-	char buffer[2048] = {0};
-
 	container.clear();
 	if (!_connected)
 		std::cerr << "ClientSocket::recv : Socket not connected."
 			<< std::endl;
 	else {
-		::recv(_socket, buffer, 8, 0);
-		auto size = std::strtoul(buffer, NULL, 10);
+		char buffer[2048] = {0};
+		unsigned long size;
+		::recv(_socket, &size, sizeof(size), 0);
 		for (size_t i = 0; i < size;) {
 			auto len = (size - i > 2048 ? 2048 : size - i);
 			memset(buffer, 0, 2048);
 			i += len;
 			::recv(_socket, buffer, len, 0);
 			container += std::string(buffer);
-			memset(buffer, 0, len);
 		}
 	}
 	return static_cast<int>(container.length());

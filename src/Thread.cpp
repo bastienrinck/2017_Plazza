@@ -20,7 +20,9 @@ Plazza::Thread::Thread(struct sockaddr master, threadSync_t *tSync) : _socket()
 	_tSync = tSync;
 	_socket.setSocket(ip, port);
 	_socket.connect();
-	_thread = std::thread([this] {proceed();});
+	_thread = std::thread([this] {
+		proceed();
+	});
 }
 
 Plazza::Thread::~Thread() = default;
@@ -36,9 +38,11 @@ void Plazza::Thread::extractData(std::string &reg)
 		_result += match.str() + "\n";
 		std::advance(first, match.position(0) + match.length(0));
 	}
-	_result.pop_back();
-	sendResults();
-	_result.clear();
+	if (!_result.empty()) {
+		_result.pop_back();
+		sendResults();
+		_result.clear();
+	}
 	_content.clear();
 }
 
@@ -56,7 +60,7 @@ void Plazza::Thread::proceed()
 	while (true) {
 		std::unique_lock<std::mutex> lck(_tSync->cvmtx);
 		while (_tSync->queue.empty())
-			_tSync->cv.wait(lck);
+			_tSync->cv.wait(lck, [this] {return !_tSync->queue.empty();});
 		_tSync->avmtx.lock();
 		_tSync->available -= 1;
 		_tSync->avmtx.unlock();

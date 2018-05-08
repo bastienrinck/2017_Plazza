@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include <iostream>
+#include <ostream>
 #include <glob.h>
 #include <netinet/in.h>
 #include <future>
+#include <fstream>
 #include "Socket.hpp"
 #include "ForkPool.hpp"
 
@@ -35,6 +36,7 @@ namespace Plazza {
 		std::string _cmd;
 		size_t _nbThread;
 		Socket _socket;
+		std::filebuf _fb;
 		struct sockaddr _master = {0, 0};
 		std::thread _output;
 		ForkPool _forkPool;

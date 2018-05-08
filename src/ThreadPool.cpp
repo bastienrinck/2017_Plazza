@@ -9,8 +9,8 @@
 #include <memory>
 #include "ThreadPool.hpp"
 
-Plazza::ThreadPool::ThreadPool(struct sockaddr master, size_t maxThread) :
-	_maxThread(maxThread)
+Plazza::ThreadPool::ThreadPool(struct sockaddr master, size_t maxThread)
+	: _maxThread(maxThread)
 {
 	_tsync.available = maxThread;
 	for (size_t i = 0; i < _maxThread; ++i)

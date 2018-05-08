@@ -84,9 +84,8 @@ int Plazza::ServerSocket::send(const std::string &data, size_t pos) const
 		std::cerr << "ServerSocket::send : Wrong socket pos."
 			<< std::endl;
 	else {
-		std::string len = std::to_string(data.length());
-		len = std::string(8 - len.size(), '0').append(len);
-		::send(_client[pos], len.c_str(), 8, 0);
+		auto size = data.size();
+		::send(_client[pos], &size, sizeof(size), 0);
 		ret = ::send(_client[pos], data.c_str(), data.size(), 0);
 	}
 	return static_cast<int>(ret);
@@ -103,8 +102,8 @@ int Plazza::ServerSocket::receive(std::string &container, size_t pos)
 			<< std::endl;
 	else {
 		char buffer[2048] = {0};
-		::recv(_client[pos], buffer, 8, 0);
-		auto size = std::strtoul(buffer, NULL, 10);
+		unsigned long size;
+		::recv(_client[pos], &size, sizeof(size), 0);
 		for (size_t i = 0; i < size;) {
 			auto len = (size - i > 2048 ? 2048 : size - i);
 			memset(buffer, 0, 2048);

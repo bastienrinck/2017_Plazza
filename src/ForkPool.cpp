@@ -52,13 +52,12 @@ void Plazza::ForkPool::setMasterSocket(struct sockaddr master)
 
 void Plazza::ForkPool::cleanForkList()
 {
-	for (size_t i = 0; i < _forks.size(); ++i) {
-		waitpid(_forks[i]->getPid(), NULL, WNOHANG);
+	for (size_t i = 0; i < _forks.size(); ++i)
 		if (kill(_forks[i]->getPid(), 0) == -1) {
+			waitpid(_forks[i]->getPid(), nullptr, WNOHANG);
 			_forks.erase(_forks.begin() + i);
 			i = 0;
 		}
-	}
 }
 
 size_t Plazza::ForkPool::getLeastLoaded()

@@ -115,6 +115,7 @@ void Plazza::Fork::checkTimeout()
 		count = (getWorkLoad() == _maxThread) ? count + 1 : 0;
 		if (count == 5){
 			exitThreads();
+			waitpid(_forkPid, nullptr, WNOHANG);
 			break;
 		}
 		sleep(1);

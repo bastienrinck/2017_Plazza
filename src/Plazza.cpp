@@ -20,6 +20,7 @@ Plazza::Plazza::Plazza(bool _isCLI, size_t nbThread) : _isCLI(_isCLI),
 	auto server = dynamic_cast<ServerSocket *>(_socket.getServer());
 	auto client = dynamic_cast<ClientSocket *>(_socket.getClient());
 
+	_fb.open ("plazza.log", std::ios::out);
 	server->setSocket(0);
 	client->setSocket(server->getSocketIp(), server->getSocketPort());
 	_master = server->getSockaddr();
@@ -36,6 +37,7 @@ Plazza::Plazza::~Plazza()
 {
 	exitSignal.set_value();
 	_output.join();
+	_fb.close();
 }
 
 void Plazza::Plazza::readCmd()
@@ -97,11 +99,13 @@ bool Plazza::Plazza::recvClientData(std::vector<struct pollfd> &pollfd,
 )
 {
 	bool ret = false;
+	std::ostream stream(&_fb);
 
 	if (pollfd[idx].revents & POLLIN) {
 		std::string buf;
 		if (server->receive(buf, idx - 1)) {
 			std::cout << buf << std::endl;
+			stream << buf << std::endl;
 			pollfd[idx].revents = 0;
 			ret = true;
 		}
@@ -132,7 +136,7 @@ void Plazza::Plazza::retrieveData()
 	while (_futureObj.wait_for(std::chrono::milliseconds(1)) ==
 		std::future_status::timeout) {
 		auto res = 0;
-		while ((res = poll(&pollfd.front(), pollfd.size(), 100)) > 0)
+		while ((res = poll(&pollfd.front(), pollfd.size(), 1)) > 0)
 			for (size_t i = 0; res && i < pollfd.size(); ++i) {
 				if (acceptIncClient(pollfd, server, i) ||
 					recvClientData(pollfd, server, i) ||
