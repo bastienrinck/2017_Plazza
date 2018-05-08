@@ -29,16 +29,11 @@ namespace Plazza {
 	private:
 		void awaitCmd();
 		void clientCmdProceed(std::string &);
-		void checkTimeout();
 
 		int _forkPid;
 		struct sockaddr _master;
 		size_t _maxThread;
 		Plazza::Socket _socket;
 		std::unique_ptr<ThreadPool> _threadPool = nullptr;
-		std::thread _thread;
-		std::promise<void> exitSignal;
-		std::future<void> _futureObj;
-		std::mutex _locker;
 	};
 }
