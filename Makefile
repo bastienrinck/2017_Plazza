@@ -30,7 +30,17 @@ LIST		=	main_cli	\
 			UnixSocket
 
 LIST_UI		=	main_gui	\
-				GuiManager
+			GuiManager	\
+			Plazza		\
+			Thread		\
+			Fork		\
+			ForkPool	\
+			ThreadPool	\
+			Socket		\
+			ServerSocket	\
+			ClientSocket	\
+			TCPSocket	\
+			UnixSocket
 
 SORTED_UI	=	$(sort $(LIST_UI))
 SORTED		=	$(sort $(LIST))
@@ -47,7 +57,7 @@ all: 	 $(NAME)
 ui:	$(NAME_UI)
 
 $(NAME_UI):	$(OBJS_UI)
-		@$(CC) $(NAME_UI) $(OBJS_UI) -lsfml-graphics -lsfml-window -lsfml-system
+		@$(CC) $(NAME_UI) $(OBJS_UI) -lsfml-graphics -lsfml-window -lsfml-system  $(LDFLAGS)
 		@printf "[\033[0;36mbuilt\033[0m] % 32s\n" $(NAME) | tr ' ' '.'
 $(NAME): $(OBJS)
 	@$(CC) $(NAME) $(OBJS) $(LDFLAGS)
@@ -63,11 +73,11 @@ $(OBJDIR):
 
 $(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
-	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
+	@printf "[\e[35;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 $(OBJDIR_UI)/%.o:	$(SRCDIR_UI)/%.cpp
 	@$(CC) $(CPPFLAGS) -c -o $@ $<
-	@printf "[\033[33;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
+	@printf "[\e[35;1mcompile\033[0m] % 30s\n" $@ | tr ' ' '.'
 
 clean:
 	$(RM) $(OBJS)

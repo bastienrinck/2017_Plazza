@@ -21,18 +21,17 @@ namespace Plazza {
 		Plazza(bool _isCLI, size_t nbThread);
 		virtual ~Plazza();
 		int startPlazza();
-
-	private:
+		dataTypes getType(std::string) const;
 		void parseCmd(std::string &cmd);
+		bool _isCLI;
+	private:
 		void readCmd();
 		void retrieveData();
-		dataTypes getType(std::string) const;
 
 		bool acceptIncClient(std::vector<struct pollfd> &, ServerSocket *, size_t);
 		bool recvClientData(std::vector<struct pollfd> &, ServerSocket *, size_t);
 		bool closeClientLink(std::vector<struct pollfd> &, ServerSocket *, size_t);
 
-		bool _isCLI;
 		std::string _cmd;
 		size_t _nbThread;
 		Socket _socket;
@@ -42,6 +41,5 @@ namespace Plazza {
 		ForkPool _forkPool;
 		std::promise<void> exitSignal;
 		std::future<void> _futureObj;
-
 	};
 }

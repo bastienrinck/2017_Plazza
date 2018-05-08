@@ -58,7 +58,6 @@ Plazza::dataTypes Plazza::Plazza::getType(std::string type) const
 		{"IP_ADDRESS", dataTypes::ADDR},
 		{"PHONE_NUMBER", dataTypes::PHONE}};
 	auto dataType = map[type];
-
 	return dataType;
 }
 
