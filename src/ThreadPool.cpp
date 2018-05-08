@@ -25,7 +25,7 @@ size_t Plazza::ThreadPool::getWorkLoad()
 	size_t available;
 
 	_tsync.avmtx.lock();
-	available = _tsync.available;
+	available = _tsync.available + _maxThread - _tsync.queue.size();
 	_tsync.avmtx.unlock();
 	return available;
 }

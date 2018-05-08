@@ -25,7 +25,7 @@ Plazza::Fork::~Fork()
 		exitSignal.set_value();
 		_thread.join();
 		exitThreads();
-		waitpid(_forkPid, nullptr, 0);
+		waitpid(_forkPid, nullptr, WNOHANG);
 	}
 };
 
@@ -39,7 +39,9 @@ void Plazza::Fork::proceedFork()
 		exit(EXIT_SUCCESS);
 	}
 	_futureObj = exitSignal.get_future();
-	_thread = std::thread([this] {checkTimeout();});
+	_thread = std::thread([this] {
+		checkTimeout();
+	});
 }
 
 void Plazza::Fork::exitThreads()
@@ -112,10 +114,10 @@ void Plazza::Fork::checkTimeout()
 
 	while (_futureObj.wait_for(std::chrono::milliseconds(1)) ==
 		std::future_status::timeout) {
-		count = (getWorkLoad() == _maxThread) ? count + 1 : 0;
-		if (count == 5){
+		count = (getWorkLoad() == 2 * _maxThread) ? count + 1 : 0;
+		if (count == 5) {
 			exitThreads();
-			waitpid(_forkPid, nullptr, WNOHANG);
+			waitpid(_forkPid, nullptr, 0);
 			break;
 		}
 		sleep(1);
