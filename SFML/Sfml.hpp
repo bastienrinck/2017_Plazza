@@ -1,6 +1,9 @@
-//
-// Created by rectoria on 05/03/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** cpp_plazza
+** File description:
+** Created by Bastien Gaming
+*/
 
 #ifndef sfml_HPP
 #define sfml_HPP
@@ -14,61 +17,23 @@ namespace Arcade {
 	class Sfml : public Arcade::IGraphicLib {
 	public:
 		Sfml();
-
 		~Sfml() override;
 
 	public:
-		/* Get the name of the library */
 		std::string getName() const final;
 
-		/* Window handling */
-		// Main loop condition
 		bool isOpen() const final;
-
-		// Closes the window => stop loop (go menu)
 		void closeRenderer() final;
-
-		// Opens the window => start loop
 		void openRenderer(std::string const &title) final;
-
-		// Clears the screen
 		void clearWindow() final;
-
-		// Displays the buffered frame to the screen
 		void refreshWindow() final;
-
-		/* Rendering functions */
-		// Draws a PixelBox or the sprite if supported
 		void drawPixelBox(PixelBox const &) final;
-
-		// Draws a TextBox
 		void drawText(TextBox const &) final;
-
-		/* EVENT HANDLING */
-		/* */
-		/* This part can seem complicated but the implementation is quite simple. */
-		/* */
-		/* pollEvent() fetches the events from the user and saves it */
-		/* inside an std::vector<Arcade::Keys> or std::list<Arcade::Keys>. */
-		/* It returns true if at least one new event was added to the list, false otherwise. */
-		/* */
-		/* getLastEvent() returns the first event of the list. (using front() and pop_front() methods) */
-		/* or Arcade::Keys::NONE if the list is empty. */
-		/* */
-		/* clearEvents() clears the list (using clear() method). */
-		/* */
 		bool pollEvents() final;
 		Keys getLastEvent() final;
 		void clearEvents() final;
-
-		/* Context Info */
-		// get the X and Y max of the windows
 		Vect<size_t> getScreenSize() const final;
-
-		// get the Y max of the windows
 		size_t getMaxY() const final;
-
-		// get the X max of the windows
 		size_t getMaxX() const final;
 
 	private:

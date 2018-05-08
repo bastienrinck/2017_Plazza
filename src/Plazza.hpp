@@ -24,13 +24,17 @@ namespace Plazza {
 		dataTypes getType(std::string) const;
 		void parseCmd(std::string &cmd);
 		bool _isCLI;
+
 	private:
 		void readCmd();
 		void retrieveData();
 
-		bool acceptIncClient(std::vector<struct pollfd> &, ServerSocket *, size_t);
-		bool recvClientData(std::vector<struct pollfd> &, ServerSocket *, size_t);
-		bool closeClientLink(std::vector<struct pollfd> &, ServerSocket *, size_t);
+		bool acceptIncClient(std::vector<struct pollfd> &,
+		        ServerSocket *, size_t);
+		bool recvClientData(std::vector<struct pollfd> &,
+		        ServerSocket *, size_t);
+		bool closeClientLink(std::vector<struct pollfd> &,
+		        ServerSocket *, size_t);
 
 		std::string _cmd;
 		size_t _nbThread;

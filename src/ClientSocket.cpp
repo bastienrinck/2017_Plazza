@@ -78,7 +78,8 @@ int Plazza::ClientSocket::receive(std::string &container)
 			<< std::endl;
 	else {
 		char buffer[2048] = {0};
-		unsigned long size;
+		std::size_t size;
+
 		::recv(_socket, &size, sizeof(size), 0);
 		for (size_t i = 0; i < size;) {
 			auto len = (size - i > 2048 ? 2048 : size - i);

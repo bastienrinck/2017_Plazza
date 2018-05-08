@@ -79,10 +79,10 @@ int Plazza::Plazza::startPlazza()
 }
 
 bool Plazza::Plazza::acceptIncClient(std::vector<struct pollfd> &pollfd,
-	ServerSocket *server, size_t idx
-)
+	ServerSocket *server, size_t idx)
 {
 	bool ret = false;
+
 	if (pollfd[idx].revents & POLLIN &&
 		pollfd[idx].fd == server->getSocket()) {
 		server->accept();

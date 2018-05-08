@@ -1,6 +1,9 @@
-//
-// Created by rectoria on 4/30/18.
-//
+/*
+** EPITECH PROJECT, 2018
+** cpp_plazza
+** File description:
+** Created by Bastien Gaming
+*/
 
 #pragma once
 

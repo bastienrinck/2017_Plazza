@@ -11,7 +11,8 @@
 #include "Plazza.hpp"
 #include "GuiManager.hpp"
 
-Plazza::GuiManager::GuiManager(std::string arg) : _arg(std::move(arg))
+Plazza::GuiManager::GuiManager(std::string arg)
+	: _arg(std::move(arg))
 {
 	_texture.create(1920, 1080);
 	_sprite.setTexture(_texture);
@@ -19,8 +20,7 @@ Plazza::GuiManager::GuiManager(std::string arg) : _arg(std::move(arg))
 	_textureImg.loadFromFile("img/blue-circle.png");
 }
 
-Plazza::GuiManager::~GuiManager()
-= default;
+Plazza::GuiManager::~GuiManager() = default;
 
 void Plazza::GuiManager::openRenderer()
 {
@@ -57,7 +57,9 @@ void Plazza::GuiManager::setButtonWindow()
 	_window.draw(sprite);
 	if (!_info.empty())
 		this->drawText("Info choisi : " + _info, {10, 110});
-	this->drawText(std::string("Looking for " + _info + " on file: " + _file), {0, 200});
+	this->drawText(
+		std::string("Looking for " + _info + " on file: " + _file),
+		{0, 200});
 }
 
 bool Plazza::GuiManager::isOpen() const
@@ -69,14 +71,14 @@ bool Plazza::GuiManager::pollEvents()
 {
 	auto event = sf::Event();
 	bool ret = false;
-
 	while (_window.pollEvent(event)) {
 		switch (event.type) {
 			case sf::Event::Closed :
 				_window.close();
 				break;
 			case sf::Event::MouseButtonPressed :
-				this->getMousePressed(sf::Vector2f(sf::Mouse::getPosition(_window)));
+				this->getMousePressed(sf::Vector2f(
+					sf::Mouse::getPosition(_window)));
 				break;
 			case sf::Event::TextEntered :
 				setCmd(static_cast<char>(event.text.unicode));
@@ -90,15 +92,11 @@ bool Plazza::GuiManager::pollEvents()
 
 void Plazza::GuiManager::drawLine()
 {
-	sf::Vertex line[] = {
-		sf::Vertex(sf::Vector2f(0, 150)),
-		sf::Vertex(sf::Vector2f(250, 150))
-	};
+	sf::Vertex line[] = {sf::Vertex(sf::Vector2f(0, 150)),
+		sf::Vertex(sf::Vector2f(250, 150))};
 	_window.draw(line, 2, sf::Lines);
-	sf::Vertex linetmp[] = {
-		sf::Vertex(sf::Vector2f(250, 0)),
-		sf::Vertex(sf::Vector2f(250, 150))
-	};
+	sf::Vertex linetmp[] = {sf::Vertex(sf::Vector2f(250, 0)),
+		sf::Vertex(sf::Vector2f(250, 150))};
 	_window.draw(linetmp, 2, sf::Lines);
 }
 
@@ -134,7 +132,9 @@ void Plazza::GuiManager::getMousePressed(sf::Vector2f click)
 	}
 }
 
-void Plazza::GuiManager::drawText(std::basic_string<char> string, sf::Vector2f pos)
+void Plazza::GuiManager::drawText(std::basic_string<char> string,
+	sf::Vector2f pos
+)
 {
 	_text.setFont(_font);
 	_text.setString(string);
@@ -153,13 +153,3 @@ void Plazza::GuiManager::setCmd(char c)
 			_file += c;
 	}
 }
-/*
-void Plazza::GuiManager::cmdReady(Plazza pl)
-{
-	std::cout << std::string("Find " + _info + " on file: " + _file) << std::endl;
-	std::string tmp(_info + _file);
-	pl.parseCmd(tmp);
-	_file.clear();
-	_info.clear();
-	_isCmdReady = false;
-}*/
