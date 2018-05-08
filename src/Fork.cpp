@@ -11,49 +11,46 @@
 #include <sys/wait.h>
 #include <unordered_map>
 #include <cstring>
+#include <arpa/inet.h>
 #include "Fork.hpp"
 
-Plazza::Fork::Fork(struct sockaddr master, size_t maxThreads) :
-	_master(master)
-	, _maxThread(maxThreads)
-	, _socket(true)
+Plazza::Fork::Fork(struct sockaddr master, size_t maxThreads) : _master(master),
+	_maxThread(maxThreads), _socket(true)
 {
-	/*auto start = std::chrono::system_clock::now();
-	_forkPid = fork();
-	int i = 0;
-	if (!_forkPid) {
-		std::cout << "Fork is born. (pid: " << getpid() << ")\n";
-		while (i == 0) {
-			sleep(1);
-			auto end = std::chrono::system_clock::now();
-			std::chrono::duration<double> elapsed_seconds =
-				end - start;
-			if (!(_threadPool.allAsleep()))
-				start = std::chrono::system_clock::now();
-			if (elapsed_seconds.count() >= 4)
-				i = 1;
-		}
-		std::cout << "Fork fork is dead\n";
-		exit(0);
-	}
-	else
-		std::cout << "So I'm the parent (pid: " << getpid()
-			<< ") from chld (pid: " << _forkPid << ")\n";
-			*/
-	_forkPid = fork();
-	if (!_forkPid) {
-		_threadPool = std::unique_ptr<Plazza::ThreadPool>(
-			new Plazza::ThreadPool(sockaddr(), _maxThread));
-		awaitCmd();
-		exit(EXIT_SUCCESS);
-	}
-	//_socket.closeClient();
 }
 
 Plazza::Fork::~Fork()
 {
-	std::cout << "[Fork] Kill fork and exiting" << std::endl;
-	kill(_forkPid, SIGTERM);
+	if (_forkPid) {
+		exitSignal.set_value();
+		_thread.join();
+		exitThreads();
+		waitpid(_forkPid, nullptr, 0);
+	}
+};
+
+void Plazza::Fork::proceedFork()
+{
+	_forkPid = fork();
+	if (!_forkPid) {
+		_threadPool = std::unique_ptr<Plazza::ThreadPool>(
+			new Plazza::ThreadPool(_master, _maxThread));
+		awaitCmd();
+		exit(EXIT_SUCCESS);
+	}
+	_futureObj = exitSignal.get_future();
+	_thread = std::thread([this] {checkTimeout();});
+}
+
+void Plazza::Fork::exitThreads()
+{
+	auto srv = dynamic_cast<ServerSocket *>(_socket.getServer());
+	std::string exitCmd = "0";
+
+	_locker.lock();
+	exitCmd[0] += Plazza::EXIT;
+	srv->send(exitCmd);
+	_locker.unlock();
 }
 
 void Plazza::Fork::proceedCmd(std::string filePath, ::Plazza::dataTypes dT)
@@ -61,17 +58,21 @@ void Plazza::Fork::proceedCmd(std::string filePath, ::Plazza::dataTypes dT)
 	std::string temp;
 	auto srv = dynamic_cast<ServerSocket *>(_socket.getServer());
 
-	srv->send("1\n");
-	srv->send(filePath + std::to_string(dT) + "\n");
+	_locker.lock();
+	srv->send("1");
+	srv->send(filePath + std::to_string(dT));
+	_locker.unlock();
 }
 
-size_t Plazza::Fork::getWorkLoad() const
+size_t Plazza::Fork::getWorkLoad()
 {
 	std::string workLoad;
 	auto srv = dynamic_cast<ServerSocket *>(_socket.getServer());
 
-	srv->send("0\n");
+	_locker.lock();
+	srv->send("0");
 	srv->receive(workLoad);
+	_locker.unlock();
 	return std::stoul(workLoad);
 }
 
@@ -82,7 +83,7 @@ void Plazza::Fork::clientCmdProceed(std::string &cmd)
 	auto client = dynamic_cast<ClientSocket *>(_socket.getClient());
 
 	if (!(cmd[0] - '0'))
-		client->send(std::to_string(_threadPool->getWorkLoad()) + "\n");
+		client->send(std::to_string(_threadPool->getWorkLoad()));
 	else {
 		client->receive(buf);
 		idx = static_cast<size_t>(buf.back() - '0');
@@ -98,6 +99,29 @@ void Plazza::Fork::awaitCmd()
 
 	while (true) {
 		client->receive(cmd);
+		if (cmd.size() == 1 && (cmd[0] - '0' == Plazza::EXIT))
+			break;
 		clientCmdProceed(cmd);
 	}
+	_threadPool->awaitThreads();
+}
+
+void Plazza::Fork::checkTimeout()
+{
+	int count = 0;
+
+	while (_futureObj.wait_for(std::chrono::milliseconds(1)) ==
+		std::future_status::timeout) {
+		count = (getWorkLoad() == _maxThread) ? count + 1 : 0;
+		if (count == 5){
+			exitThreads();
+			break;
+		}
+		sleep(1);
+	}
+}
+
+int Plazza::Fork::getPid() const
+{
+	return _forkPid;
 }

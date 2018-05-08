@@ -7,17 +7,24 @@
 
 #include <iostream>
 #include <fstream>
+#include <arpa/inet.h>
+#include <signal.h>
+#include <wait.h>
 #include "ForkPool.hpp"
 
 Plazza::ForkPool::ForkPool() = default;
 
-Plazza::ForkPool::~ForkPool() = default;
+Plazza::ForkPool::~ForkPool()
+{
+	for (auto &i : _forks)
+		i->exitThreads();
+}
 
 void Plazza::ForkPool::createFork()
 {
-	std::cout << "[ForkPool] Creating a slave" << std::endl;
-	_slaves.push_back(
+	_forks.push_back(
 		std::unique_ptr<Plazza::Fork>(new Fork(_master, _maxThreads)));
+	_forks.back()->proceedFork();
 }
 
 void Plazza::ForkPool::setNbThreads(size_t maxThreads)
@@ -28,7 +35,7 @@ void Plazza::ForkPool::setNbThreads(size_t maxThreads)
 void Plazza::ForkPool::proceedCommand(std::string file, dataTypes type)
 {
 	if (isValidFile(file))
-		_slaves[getLeastLoaded()]->proceedCmd(file, type);
+		_forks[getLeastLoaded()]->proceedCmd(file, type);
 }
 
 bool Plazza::ForkPool::isValidFile(std::string &file) const
@@ -43,20 +50,32 @@ void Plazza::ForkPool::setMasterSocket(struct sockaddr master)
 	_master = master;
 }
 
+void Plazza::ForkPool::cleanForkList()
+{
+	for (size_t i = 0; i < _forks.size(); ++i) {
+		waitpid(_forks[i]->getPid(), NULL, WNOHANG);
+		if (kill(_forks[i]->getPid(), 0) == -1) {
+			_forks.erase(_forks.begin() + i);
+			i = 0;
+		}
+	}
+}
+
 size_t Plazza::ForkPool::getLeastLoaded()
 {
 	size_t temp;
 	size_t idx = SIZE_MAX;
 	size_t minLoad = 0;
 
-	for (size_t i = 0; i < _slaves.size(); ++i) {
-		temp = _slaves[i]->getWorkLoad();
+	cleanForkList();
+	for (size_t i = 0; i < _forks.size(); ++i) {
+		temp = _forks[i]->getWorkLoad();
 		idx = (temp && minLoad < temp) ? i : idx;
 		minLoad = (temp && minLoad < temp) ? temp : minLoad;
 	}
 	if (!minLoad && idx == SIZE_MAX) {
 		createFork();
-		idx = _slaves.size() - 1;
+		idx = _forks.size() - 1;
 	}
 	return idx;
 }

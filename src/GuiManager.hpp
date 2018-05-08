@@ -5,9 +5,7 @@
 ** GuiManager.hpp
 */
 
-#ifndef CPP_PLAZZA_GUIMANAGER_HPP
-#define CPP_PLAZZA_GUIMANAGER_HPP
-
+#pragma once
 #include <SFML/Graphics.hpp>
 
 namespace Plazza {
@@ -31,4 +29,3 @@ namespace Plazza {
 		sf::Texture _textureImg;
 	};
 };
-#endif

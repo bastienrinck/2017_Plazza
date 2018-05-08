@@ -29,6 +29,7 @@ namespace Plazza {
 	enum dataTypes {
 		PHONE,
 		EMAIL,
-		ADDR
+		ADDR,
+		EXIT
 	};
 }

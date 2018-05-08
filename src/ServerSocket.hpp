@@ -1,6 +1,9 @@
-//
-// Created by rectoria on 4/30/18.
-//
+/*
+** EPITECH PROJECT, 2021
+** cpp_plazza
+** File description:
+** Created by rectoria
+*/
 
 #pragma once
 
@@ -27,6 +30,7 @@ namespace Plazza {
 		std::vector<int> getClient() const;
 		std::string getSocketIp() const;
 		int getSocketPort() const;
+		struct sockaddr getSockaddr() const;
 	private:
 		int _socket = -1;
 		std::vector<int> _client;

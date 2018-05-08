@@ -22,7 +22,7 @@ Plazza::Plazza::Plazza(bool _isCLI, size_t nbThread) : _isCLI(_isCLI),
 
 	server->setSocket(0);
 	client->setSocket(server->getSocketIp(), server->getSocketPort());
-	_master = client->getSockaddr();
+	_master = server->getSockaddr();
 	_socket.closeClient();
 	_forkPool.setNbThreads(nbThread);
 	_forkPool.setMasterSocket(_master);
@@ -36,20 +36,16 @@ Plazza::Plazza::~Plazza()
 {
 	exitSignal.set_value();
 	_output.join();
-	std::cout << "[Plazza] Quit\n";
 }
 
 void Plazza::Plazza::readCmd()
 {
-	// TODO delete this print for final push
-	std::cout << "Prompt >";
 	for (; std::getline(std::cin, _cmd);) {
-		if (strcmp(_cmd.c_str(), "quit") != 0)
+		int cmp = strcmp(_cmd.c_str(), "quit");
+		if (cmp)
 			parseCmd(_cmd);
-		// TODO delete this print for final push
-		if (!strcmp(_cmd.c_str(), "quit") || std::cin.eof())
+		if (!cmp || std::cin.eof())
 			break;
-		std::cout << "Prompt >";
 	}
 }
 
@@ -64,9 +60,6 @@ Plazza::dataTypes Plazza::Plazza::getType(std::string type) const
 	return dataType;
 }
 
-//cm.str(0) contient le full match
-//cm.str(1) contient le group 1 (fichier)
-//cm.str(2) contient le group 2 (proceedTask a checher)
 void Plazza::Plazza::parseCmd(std::string &cmd)
 {
 	std::regex pattern(
@@ -84,40 +77,67 @@ int Plazza::Plazza::startPlazza()
 	return 0;
 }
 
+bool Plazza::Plazza::acceptIncClient(std::vector<struct pollfd> &pollfd,
+	ServerSocket *server, size_t idx
+)
+{
+	bool ret = false;
+	if (pollfd[idx].revents & POLLIN &&
+		pollfd[idx].fd == server->getSocket()) {
+		server->accept();
+		pollfd[idx].revents = 0;
+		pollfd.push_back({server->getClient().back(), POLLIN, 0});
+		ret = true;
+	}
+	return ret;
+}
+
+bool Plazza::Plazza::recvClientData(std::vector<struct pollfd> &pollfd,
+	ServerSocket *server, size_t idx
+)
+{
+	bool ret = false;
+
+	if (pollfd[idx].revents & POLLIN) {
+		std::string buf;
+		if (server->receive(buf, idx - 1)) {
+			std::cout << buf << std::endl;
+			pollfd[idx].revents = 0;
+			ret = true;
+		}
+	}
+	return ret;
+}
+
+bool Plazza::Plazza::closeClientLink(std::vector<struct pollfd> &pollfd,
+	ServerSocket *server, size_t idx
+)
+{
+	bool ret = false;
+	
+	if (pollfd[idx].revents & POLLIN) {
+		server->closeConnection(pollfd[idx].fd);
+		pollfd.erase(pollfd.begin() + idx);
+		ret = true;
+	}
+	return ret;
+}
+
 void Plazza::Plazza::retrieveData()
 {
 	auto server = dynamic_cast<ServerSocket *>(_socket.getServer());
 	std::vector<struct pollfd> pollfd;
 
-	pollfd.push_back({server->getSocket(), 0, 0});
+	pollfd.push_back({server->getSocket(), POLLIN, 0});
 	while (_futureObj.wait_for(std::chrono::milliseconds(1)) ==
 		std::future_status::timeout) {
-		auto res = poll(&pollfd.front(), pollfd.size(), 100);
-		for (size_t i = 0; res && i < pollfd.size(); ++i) {
-			if (pollfd[i].events == POLLIN &&
-				pollfd[i].fd == server->getSocket()) {
-				server->accept();
-				pollfd.push_back(
-					{server->getClient().back(), 0, 0});
-				pollfd[i].events = 0;
-				pollfd[i].revents = 0;
-				std::cout << "New client: " << pollfd.back().fd << std::endl;
-			} else if (pollfd[i].events == POLLIN) {
-				std::string buf;
-				server->receive(buf, static_cast<size_t>(
-					std::find(server->getClient().begin(),
-						server->getClient().end(),
-						pollfd[i].fd) -
-						server->getClient().begin()));
-				std::cout << "[" << pollfd[i].fd << "] " << buf
-					<< std::endl;
-				pollfd[i].events = 0;
-				pollfd[i].revents = 0;
-			} else {
-				server->closeConnection(pollfd[i].fd);
-				pollfd.erase(pollfd.begin() + i);
+		auto res = 0;
+		while ((res = poll(&pollfd.front(), pollfd.size(), 100)) > 0)
+			for (size_t i = 0; res && i < pollfd.size(); ++i) {
+				if (acceptIncClient(pollfd, server, i) ||
+					recvClientData(pollfd, server, i) ||
+					closeClientLink(pollfd, server, i))
+					res -= 1;
 			}
-		}
 	}
-	exit(EXIT_SUCCESS);
 }

@@ -27,6 +27,10 @@ namespace Plazza {
 		void retrieveData();
 		dataTypes getType(std::string) const;
 
+		bool acceptIncClient(std::vector<struct pollfd> &, ServerSocket *, size_t);
+		bool recvClientData(std::vector<struct pollfd> &, ServerSocket *, size_t);
+		bool closeClientLink(std::vector<struct pollfd> &, ServerSocket *, size_t);
+
 		bool _isCLI;
 		std::string _cmd;
 		size_t _nbThread;

@@ -9,9 +9,10 @@
 #include <iostream>
 #include <regex>
 #include <arpa/inet.h>
+#include <zconf.h>
 #include "Thread.hpp"
 
-Plazza::Thread::Thread(struct sockaddr master, threadSync_t *tSync)
+Plazza::Thread::Thread(struct sockaddr master, threadSync_t *tSync) : _socket()
 {
 	auto ip = inet_ntoa(((struct sockaddr_in *)&master)->sin_addr);
 	auto port = ntohs(((struct sockaddr_in *)&master)->sin_port);
@@ -22,10 +23,7 @@ Plazza::Thread::Thread(struct sockaddr master, threadSync_t *tSync)
 	_thread = std::thread([this] {proceed();});
 }
 
-Plazza::Thread::~Thread()
-{
-	_thread.detach();
-}
+Plazza::Thread::~Thread() = default;
 
 void Plazza::Thread::extractData(std::string &reg)
 {
@@ -35,12 +33,13 @@ void Plazza::Thread::extractData(std::string &reg)
 	std::match_results<decltype(first)> match;
 
 	while (std::regex_search(first, last, match, re)) {
-		_results.push_back(match.str());
+		_result += match.str() + "\n";
 		std::advance(first, match.position(0) + match.length(0));
 	}
+	_result.pop_back();
 	sendResults();
+	_result.clear();
 	_content.clear();
-	_results.clear();
 }
 
 void Plazza::Thread::proceedTask()
@@ -63,20 +62,23 @@ void Plazza::Thread::proceed()
 		_tSync->avmtx.unlock();
 		_task = _tSync->queue.front();
 		_tSync->queue.pop();
-		proceedTask();
+		if (_task.dataType != Plazza::EXIT)
+			proceedTask();
 		_tSync->avmtx.lock();
 		_tSync->available += 1;
 		_tSync->avmtx.unlock();
+		if (_task.dataType == Plazza::EXIT)
+			break;
 	}
-
+	close(_socket.getSocket());
 }
 
 void Plazza::Thread::sendResults()
 {
-	_tSync->avmtx.lock();
-	for (auto &i : _results) {
-		std::cout << i << std::endl;
-		_socket.send(i);
-	}
-	_tSync->avmtx.unlock();
+	_socket.send(_result);
+}
+
+void Plazza::Thread::join()
+{
+	_thread.join();
 }

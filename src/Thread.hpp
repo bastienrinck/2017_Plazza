@@ -11,6 +11,7 @@
 #include <vector>
 #include <thread>
 #include <netinet/in.h>
+#include <memory>
 #include "datatype.hpp"
 #include "ClientSocket.hpp"
 
@@ -19,6 +20,8 @@ namespace Plazza {
 	public:
 		Thread(struct sockaddr master, threadSync_t *);
 		virtual ~Thread();
+
+		void join();
 	private:
 		void proceed();
 		void proceedTask();
@@ -29,7 +32,7 @@ namespace Plazza {
 		Plazza::ClientSocket _socket;
 		Plazza::threadSync_t *_tSync;
 		std::string _content;
-		std::vector<std::string> _results;
+		std::string _result;
 		std::thread _thread;
 		std::vector<std::string> _regex = {
 			"(0 ?[1-9]) ?([0-9] ?){8}",

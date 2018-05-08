@@ -18,6 +18,7 @@ namespace Plazza {
 		~ThreadPool();
 		size_t getWorkLoad();
 		void assignTask(std::string &filename, size_t type);
+		void awaitThreads();
 	private:
 		size_t _maxThread;
 		threadSync_t _tsync;
