@@ -27,6 +27,7 @@ void Plazza::ForkPool::setNbThreads(size_t maxThreads)
 
 void Plazza::ForkPool::proceedCommand(std::string file, dataTypes type)
 {
+	std::cout << "je suis la" << std::endl;
 	if (isValidFile(file))
 		_slaves[getLeastLoaded()]->proceedCmd(file, type);
 }

@@ -5,13 +5,13 @@
 ** GuiManager.cpp
 */
 
-#include <unistd.h>
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include "Plazza.hpp"
 #include "GuiManager.hpp"
 
-Plazza::GuiManager::GuiManager()
+Plazza::GuiManager::GuiManager(std::string arg) : _arg(std::move(arg))
 {
 	_texture.create(1920, 1080);
 	_sprite.setTexture(_texture);
@@ -42,17 +42,17 @@ void Plazza::GuiManager::setButtonWindow()
 	sf::Sprite sprite(_textureImg);
 	sprite.setPosition(10, 20);
 	sprite.setScale(sf::Vector2f(0.09f, 0.09f));
-	_vector["Email Address"] = sprite.getGlobalBounds();
-	this->drawText(std::string("Email Adress"), {40, 20});
+	_vector["EMAIL_ADDRESS"] = sprite.getGlobalBounds();
+	this->drawText(std::string("Email Address"), {40, 20});
 	_window.draw(sprite);
 	sprite.setPosition(10, 50);
 	sprite.setScale(sf::Vector2f(0.09f, 0.09f));
-	_vector["Phone Number"] = sprite.getGlobalBounds();
+	_vector["PHONE_NUMBER"] = sprite.getGlobalBounds();
 	this->drawText(std::string("Phone Number"), {40, 50});
 	_window.draw(sprite);
 	sprite.setPosition(10, 80);
 	sprite.setScale(sf::Vector2f(0.09f, 0.09f));
-	_vector["Ip Address"] = sprite.getGlobalBounds();
+	_vector["IP_ADDRESS"] = sprite.getGlobalBounds();
 	this->drawText(std::string("Ip Address"), {40, 80});
 	_window.draw(sprite);
 	if (!_info.empty())
@@ -81,27 +81,8 @@ bool Plazza::GuiManager::pollEvents()
 			case sf::Event::TextEntered :
 				setCmd(static_cast<char>(event.text.unicode));
 				break;
-			case sf::Event::Resized:break;
-			case sf::Event::LostFocus:break;
-			case sf::Event::GainedFocus:break;
-			case sf::Event::KeyPressed:break;
-			case sf::Event::KeyReleased:break;
-			case sf::Event::MouseWheelMoved:break;
-			case sf::Event::MouseWheelScrolled:break;
-			case sf::Event::MouseButtonReleased:break;
-			case sf::Event::MouseMoved:break;
-			case sf::Event::MouseEntered:break;
-			case sf::Event::MouseLeft:break;
-			case sf::Event::JoystickButtonPressed:break;
-			case sf::Event::JoystickButtonReleased:break;
-			case sf::Event::JoystickMoved:break;
-			case sf::Event::JoystickConnected:break;
-			case sf::Event::JoystickDisconnected:break;
-			case sf::Event::TouchBegan:break;
-			case sf::Event::TouchMoved:break;
-			case sf::Event::TouchEnded:break;
-			case sf::Event::SensorChanged:break;
-			case sf::Event::Count:break;
+			default :
+				break;
 		}
 	}
 	return ret;
@@ -123,6 +104,7 @@ void Plazza::GuiManager::drawLine()
 
 bool Plazza::GuiManager::guiLoop()
 {
+	Plazza pl(true, std::stoul(_arg));
 	this->openRenderer();
 	this->openRenderer();
 	while (this->isOpen()) {
@@ -132,7 +114,10 @@ bool Plazza::GuiManager::guiLoop()
 		this->drawLine();
 		_window.display();
 		if (_isCmdReady) {
-			this->drawText(std::string("Find " + _info + " on file: " + _file), {200, 200});
+			std::cout << "ici" << std::endl;
+			std::string tmp(_file + " " + _info);
+			std::cout << tmp << std::endl;
+			pl.parseCmd(tmp);
 			_file.clear();
 			_info.clear();
 			_isCmdReady = false;
@@ -169,12 +154,13 @@ void Plazza::GuiManager::setCmd(char c)
 			_file += c;
 	}
 }
-
-void Plazza::GuiManager::cmdReady()
+/*
+void Plazza::GuiManager::cmdReady(Plazza pl)
 {
 	std::cout << std::string("Find " + _info + " on file: " + _file) << std::endl;
-	usleep(5000);
-	this->drawText(std::string("Find " + _info + " on file: " + _file), {60, 60});
+	std::string tmp(_info + _file);
+	pl.parseCmd(tmp);
 	_file.clear();
 	_info.clear();
-}
+	_isCmdReady = false;
+}*/

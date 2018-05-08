@@ -12,12 +12,13 @@
 #include <iostream>
 #include <unordered_map>
 #include <map>
+#include "ForkPool.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace Plazza {
 	class GuiManager {
 	public:
-		GuiManager();
+		GuiManager(std::string arg);
 		~GuiManager();
 		void openRenderer();
 		void closeRenderer();
@@ -29,6 +30,8 @@ namespace Plazza {
 		bool pollEvents();
 		void drawText(std::basic_string<char> text, sf::Vector2f pos);
 		void drawLine();
+		void setCmd(char i);
+		//void cmdReady(Plazza pl);
 	private:
 		std::string _info = "";
 		std::map<std::string, sf::FloatRect> _vector;
@@ -40,47 +43,44 @@ namespace Plazza {
 		sf::Texture _textureImg;
 		std::string _file;
 		bool _isCmdReady = false;
-		std::unordered_map<sf::Keyboard::Key, Plazza::Keys> _keyMap = {
-			{sf::Keyboard::Key::A, Plazza::Keys::A},
-			{sf::Keyboard::Key::B, Plazza::Keys::B},
-			{sf::Keyboard::Key::C, Plazza::Keys::C},
-			{sf::Keyboard::Key::D, Plazza::Keys::D},
-			{sf::Keyboard::Key::E, Plazza::Keys::E},
-			{sf::Keyboard::Key::F, Plazza::Keys::F},
-			{sf::Keyboard::Key::G, Plazza::Keys::G},
-			{sf::Keyboard::Key::H, Plazza::Keys::H},
-			{sf::Keyboard::Key::I, Plazza::Keys::I},
-			{sf::Keyboard::Key::J, Plazza::Keys::J},
-			{sf::Keyboard::Key::K, Plazza::Keys::K},
-			{sf::Keyboard::Key::L, Plazza::Keys::L},
-			{sf::Keyboard::Key::M, Plazza::Keys::M},
-			{sf::Keyboard::Key::N, Plazza::Keys::N},
-			{sf::Keyboard::Key::O, Plazza::Keys::O},
-			{sf::Keyboard::Key::P, Plazza::Keys::P},
-			{sf::Keyboard::Key::Q, Plazza::Keys::Q},
-			{sf::Keyboard::Key::R, Plazza::Keys::R},
-			{sf::Keyboard::Key::S, Plazza::Keys::S},
-			{sf::Keyboard::Key::T, Plazza::Keys::T},
-			{sf::Keyboard::Key::U, Plazza::Keys::U},
-			{sf::Keyboard::Key::V, Plazza::Keys::V},
-			{sf::Keyboard::Key::W, Plazza::Keys::W},
-			{sf::Keyboard::Key::X, Plazza::Keys::X},
-			{sf::Keyboard::Key::Y, Plazza::Keys::Y},
-			{sf::Keyboard::Key::Z, Plazza::Keys::Z},
-			{sf::Keyboard::Key::Left, Plazza::Keys::LEFT},
-			{sf::Keyboard::Key::Right, Plazza::Keys::RIGHT},
-			{sf::Keyboard::Key::Up, Plazza::Keys::UP},
-			{sf::Keyboard::Key::Down, Plazza::Keys::DOWN},
-			{sf::Keyboard::Key::Return, Plazza::Keys::ENTER},
-			{sf::Keyboard::Key::Space, Plazza::Keys::SPACE},
-			{sf::Keyboard::Key::Delete, Plazza::Keys::DELETE},
-			{sf::Keyboard::Key::BackSpace, Plazza::Keys::BACKSPACE},
-			{sf::Keyboard::Key::Tab, Plazza::Keys::TAB},
-			{sf::Keyboard::Key::Escape, Plazza::Keys::ESC}};
-
-		void setCmd(char i);
-
-		void cmdReady();
+		std::unordered_map<sf::Keyboard::Key, Keys> _keyMap = {
+			{sf::Keyboard::Key::A, Keys::A},
+			{sf::Keyboard::Key::B, Keys::B},
+			{sf::Keyboard::Key::C, Keys::C},
+			{sf::Keyboard::Key::D, Keys::D},
+			{sf::Keyboard::Key::E, Keys::E},
+			{sf::Keyboard::Key::F, Keys::F},
+			{sf::Keyboard::Key::G, Keys::G},
+			{sf::Keyboard::Key::H, Keys::H},
+			{sf::Keyboard::Key::I, Keys::I},
+			{sf::Keyboard::Key::J, Keys::J},
+			{sf::Keyboard::Key::K, Keys::K},
+			{sf::Keyboard::Key::L, Keys::L},
+			{sf::Keyboard::Key::M, Keys::M},
+			{sf::Keyboard::Key::N, Keys::N},
+			{sf::Keyboard::Key::O, Keys::O},
+			{sf::Keyboard::Key::P, Keys::P},
+			{sf::Keyboard::Key::Q, Keys::Q},
+			{sf::Keyboard::Key::R, Keys::R},
+			{sf::Keyboard::Key::S, Keys::S},
+			{sf::Keyboard::Key::T, Keys::T},
+			{sf::Keyboard::Key::U, Keys::U},
+			{sf::Keyboard::Key::V, Keys::V},
+			{sf::Keyboard::Key::W, Keys::W},
+			{sf::Keyboard::Key::X, Keys::X},
+			{sf::Keyboard::Key::Y, Keys::Y},
+			{sf::Keyboard::Key::Z, Keys::Z},
+			{sf::Keyboard::Key::Left, Keys::LEFT},
+			{sf::Keyboard::Key::Right, Keys::RIGHT},
+			{sf::Keyboard::Key::Up, Keys::UP},
+			{sf::Keyboard::Key::Down, Keys::DOWN},
+			{sf::Keyboard::Key::Return, Keys::ENTER},
+			{sf::Keyboard::Key::Space, Keys::SPACE},
+			{sf::Keyboard::Key::Delete, Keys::DELETE},
+			{sf::Keyboard::Key::BackSpace, Keys::BACKSPACE},
+			{sf::Keyboard::Key::Tab, Keys::TAB},
+			{sf::Keyboard::Key::Escape, Keys::ESC}};
+		std::string _arg;
 	};
 };
 #endif
